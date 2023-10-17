@@ -1,0 +1,214 @@
+name: GitHub Classroom Workflow
+
+on: 
+  push:
+    branches:
+    - '*'
+    - '!status'
+    - '!feedback'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  DBPASS: 'Pa$$w0rd1234'
+  FEEDBACK_TEMPLATE_PATH: ".github/grading_templates/pr_feedback.md"
+  GRADING_FEEDBACK_TEMPFILE_DIR: ".github/temp/"
+
+jobs:
+  # job to run autograding
+  grade:
+    name: Autograding
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.repository.is_template }}
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: ${{ env.DBPASS }}
+        ports:
+        - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P \"${SA_PASSWORD}\" -Q \"SELECT 1\" -b -o /dev/null"
+          --health-interval 10s
+          --health-timeout 3s
+          --health-retries 5
+          --health-start-period 10s
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      # # additional db setup
+      # - name: setup DB
+      #   run: sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d master -i "00-setup.sql"
+
+      # run grading
+      # add id to step so outputs can be referenced
+      - uses: education/autograding@v1
+        name: "** Grading and Feedback **"
+        id: autograde
+        continue-on-error: true
+
+      # upload feedback artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          name: grading-feedback
+          path: ${{ env.GRADING_FEEDBACK_TEMPFILE_DIR }}
+
+      # calculate grading score percentage
+      - name: calculate points percentage
+        id: calc-percentage
+        run: |
+          points="${{ steps.autograde.outputs.Points }}"
+          percent=$( bc <<< "scale=2; 100*$points" )
+          echo "::set-output name=percent::$percent"
+
+      # fail job if autograding returns failed
+      # outcome can be 'success', 'failure', 'cancelled', or 'skipped'
+      # trigger fail either on !success or on failure depending on preference
+      - name: check autograding pass fail
+        if: ${{ steps.calc-percentage.outputs.percent < 60 }}
+        run: exit 1
+
+    outputs:
+      grading-score: ${{ steps.autograde.outputs.Points }}
+      grading-percent: ${{ steps.calc-percentage.outputs.percent }}
+
+  # job to find Feedback PR issue number. If created by Classroom, should be issue 1.
+  find-feedback-pr:
+    name: Find Feedback PR
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.repository.is_template && github.ref == 'refs/heads/main' && github.actor != 'github-classroom[bot]' }}
+    steps:
+      # find PR if it exists
+      - name: Find PR number
+        uses: markpatterson27/find-pull-request-action@pre-pr-release-v1.8.0
+        id: check-pr
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          title: Feedback
+          base: feedback
+          branch: main
+          state: all
+
+      # - run: echo ${{ steps.check-pr.outputs.number }}
+
+    outputs:
+      feedback-pr: ${{ steps.check-pr.outputs.number }}
+  
+  # job to post feedback message in Feedback PR
+  # Classroom will create the PR when assignment accepted. PR should be issue 1.
+  post-feedback:
+    name: Post Feedback Comment
+    runs-on: ubuntu-latest
+    # run even if autograding fails. only run on main branch.
+    if: ${{ always() && needs.find-feedback-pr.outputs.feedback-pr != 0 }}
+    needs: [grade, find-feedback-pr]
+    steps:
+      # checkout files so can access template
+      - uses: actions/checkout@v4
+
+      # download feedback artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: grading-feedback
+          path: ${{ env.GRADING_FEEDBACK_TEMPFILE_DIR }}
+      
+      # parse feedback files to step output and env vars
+      - name: parse feedback files to step output
+        id: feedback
+        run: |
+          files=($GRADING_FEEDBACK_TEMPFILE_DIR/*)
+          for f in ${files[@]}; do
+            echo "File found: $f"
+            name=$(basename -s .md $f)
+            message=`cat $f`
+            message="${message//'%'/'%25'}"
+            message="${message//$'\n'/'%0A'}"
+            message="${message//$'\r'/'%0D'}"
+            echo "::set-output name=$name::$message"
+            echo "fb-$name=$message" >> $GITHUB_ENV
+          done
+
+      # read template file and replace tokens. token replacement based on env name.
+      - name: prepare comment and substitute tokens
+        id: prep
+        uses: actions/github-script@v6
+        env:
+          points: ${{ needs.grade.outputs.grading-score }}
+          percentage: ${{ needs.grade.outputs.grading-percent }}
+        with:
+          script: |
+            const fs = require('fs')
+            let commentBody = fs.readFileSync(process.env.FEEDBACK_TEMPLATE_PATH, "utf8")
+
+            for (envName in process.env) {
+              commentBody = commentBody.replace("${"+envName+"}", process.env[envName]
+                .replace(/%0D/g, '\r')
+                .replace(/%0A/g, '\n')
+                .replace(/%25/g, '\%'))
+            }
+
+            return commentBody
+          result-encoding: string
+
+      # hide old feedback comments
+      - name: hide old feedback comments
+        uses: kanga333/comment-hider@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_number: ${{ needs.find-feedback-pr.outputs.feedback-pr }}
+
+      # post comment on feedback PR. issues and PRs have same numbers
+      - name: post comment
+        uses: actions/github-script@v6
+        env:
+          MESSAGE: ${{ steps.prep.outputs.result }}
+          ISSUE: ${{ needs.find-feedback-pr.outputs.feedback-pr }}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { MESSAGE, ISSUE } = process.env
+            await github.rest.issues.createComment({
+              issue_number: process.env.ISSUE,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${MESSAGE}`
+            })
+
+  # job to build custom status badge and icons
+  update-activity-status:
+    name: Update Activity Statuses
+    runs-on: ubuntu-latest
+    if: ${{ always() && !github.event.repository.is_template }}
+    needs: grade
+    steps:
+      # need to checkout whole repo
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # switch to status branch
+      - run: git checkout status || git checkout -b status
+
+      # make dir for activity icons
+      - name: make activity icons dir
+        run: mkdir -p .github/activity-icons
+
+      # create points bar
+      - name: points bar
+        uses: markpatterson27/points-bar@v1
+        with:
+          points: ${{ needs.grade.outputs.grading-score }}
+          path: '.github/activity-icons/points-bar.svg'
+        continue-on-error: true
+
+      # commit and push points-bar if changed
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "github-actions"
+          git add '.github/activity-icons'
+          git commit -m "Add/Update points bar" || exit 0
+          git push origin status

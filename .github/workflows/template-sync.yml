@@ -1,0 +1,25 @@
+name: Sync from template source
+
+on:
+  # push:
+  #   branches:
+  #   - '*'
+  #   - '!source-template-updates'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: markpatterson27/Template-Sync-Workflow/.github/workflows/template-sync.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      template-repo: SERC-Computing/SQL-Server-Labs-Template
+      create-pr: true
+      update-branch-name: source-template-updates
+      update-strategy: cherry-pick
+    secrets:
+      workflowPAT: ${{ secrets.SYNC_TOKEN }}
+      templatePAT: ${{ secrets.SYNC_TOKEN }}
