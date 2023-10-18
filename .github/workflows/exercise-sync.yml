@@ -1,10 +1,11 @@
-name: Sync from original template source
+name: Sync from exercise template source
 
 on:
-  # push:
-  #   branches:
-  #   - '*'
-  #   - '!source-template-updates'
+  push:
+    branches:
+    - '*'
+    - '!feedback'
+    - '!source-template-updates'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -12,11 +13,8 @@ on:
 jobs:
   sync:
     uses: markpatterson27/Template-Sync-Workflow/.github/workflows/template-sync.yml@main
-    permissions:
-      contents: write
-      pull-requests: write
     with:
-      template-repo: SERC-Computing/SQL-Server-Labs-Template
+      template-repo: SERC-COM299/CookieDB-KV1-CREATE-and-INSERT
       create-pr: true
       update-branch-name: source-template-updates
       update-strategy: cherry-pick
