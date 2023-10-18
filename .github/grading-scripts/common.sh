@@ -9,7 +9,7 @@ FEEDBACKFILE_DIR=.github/temp/
 DATADIR=.github/data/
 EXPECTED_RESULTS_DIR=.github/expected-results/
 
-DBNAME=#enter DB name here
+DBNAME=Cookie
 
 PASS_CHAR=":white_check_mark: "
 FAIL_CHAR=":x: "
