@@ -35,39 +35,36 @@ When you push your changes back to the assignment GitHub repo, a grading action 
 
 ## Exercise 1
 
-Description of exercise. Point learner towards file or filename to use; i.e Using the `exercise1.sql` file...
+1. Using the `11-Exercise1.sql` file, write a query that creates a database called `Cookie`.
 
-1. task
+2. Still using the `11-Exercise1.sql` file, add a query that creates a table in `Cookie` called `Products` with the following attributes:
+   
+   - cookieID
+   - cookieName
+   - description
+   - price
+   
+   The attributes should take suitable value types.
 
-1. task
+3. Push your changes back to your assignment GitHub repo. Remember to try to make your commits atomic and your commit messages descriptive.
 
-1. task
+4. Wait a minute for the grading tests to run and then check the [Feedback pull request](../..pull/1) to see if you have completed the exercise successfully. When the grading action finishes, it will post a comment on the Feedback PR with a summary of how / if you have completed the exercise successfully.
 
-Marks available: 10
+Marks available: 38
 
 ## Exercise 2
 
-Description of exercise. Point learner towards file or filename to use; i.e Using the `exercise2.sql` file...
+1. Using the `12-Exercise2.sql` file, write a query that will populate the `Products` table with the data from *Table 1* above.
 
-1. task
-
-1. task
-
-1. task
-
-Marks available: 10
+Marks available: 12
 
 ## Exercise 3
 
-Description of exercise. Point learner towards file or filename to use; i.e Using the `exercise3.sql` file...
+1. Using the `13-Exercise3.sql` file, write a query that will return the contents of the `Products` table as is.
 
-1. task
+2. Still using the `13-Exercise3.sql` file, write a query that returns the contents of the `Products` table in numerically order based on the cookie price (cheapest first).
 
-1. task
-
-1. task
-
-Marks available: 10
+Marks available: 25
 
 ## Post Exercises
 
