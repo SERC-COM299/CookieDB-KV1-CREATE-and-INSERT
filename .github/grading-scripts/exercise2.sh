@@ -116,6 +116,9 @@ test_table_row_populated () {
             echo "    Value of \"$c\" entered incorrectly"
             feedback_msg+="$TABSPACE$TABSPACEValue of \"$c\" entered incorrectly  \n"
             status=1
+
+            echo "    expected: $expected"
+            echo "    result: $result"
         fi
         ((++i))
     done
