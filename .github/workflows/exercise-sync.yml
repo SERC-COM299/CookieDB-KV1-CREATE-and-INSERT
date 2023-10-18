@@ -1,11 +1,11 @@
 name: Sync from exercise template source
 
 on:
-  push:
-    branches:
-    - '*'
-    - '!feedback'
-    - '!source-template-updates'
+  # push:
+  #   branches:
+  #   - '*'
+  #   - '!feedback'
+  #   - '!source-template-updates'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
