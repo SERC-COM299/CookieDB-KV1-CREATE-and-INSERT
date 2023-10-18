@@ -1,28 +1,37 @@
-# SQL Server Exercises Template
+# CookieDB - Knowledge Verification Lab 1 - CREATE and INSERT
 
 <img alt="points bar" align="right" height="36" src="../../blob/status/.github/activity-icons/points-bar.svg" />
 
-Template repository with starter files for creating SQL Server labs and exercises. The labs could then be used with [GH Classroom](https://classroom.github.com/).
-
-If there are changes made in this template repo after a lab repo has been created, some of those changes can be pulled in by setting this repo as an upstream remote:
-
-```sh
-git remote add upstream https://github.com/SERC-Computing/SQL-Server-Labs-Template.git
-git fetch upstream
-```
+In this lab, learners will write queries that create a database and a table in that database. Learners will then populate the table with data. Finally, learners will write queries to check the contents of the table.
 
 ## Scenario
 
-If the lab is based on a scenario, describe the scenario here.
+"Cookie Co." is a supplier of various cookies to shops across the country. The company is in the process of creating a database to store information about their customers and orders. They want you to help them implement the database.
 
-<!-- insert a summary of tasks / ILO here -->
-The main tasks/learning objects in the lab are as follows:
+Below is a table of the different cookie types that Cookie Co. supplies.
 
-1. task
-1. task
-1. task
+| Cookie ID | Cookie Name                   | Price | Description                                              |
+| --------- | ----------------------------- | ----- | -------------------------------------------------------- |
+| 1         | Chocolate Chip                | 5.00  | Drop cookie featuring chocolate chips                    |
+| 2         | Fortune Cookie                | 1.00  | Crisp and sugary cookie with a paper fortune inside      |
+| 3         | Oatmeal Raisin                | 5.00  | Drop cookie made from oatmeal dough and raisins          |
+| 4         | Snickerdoodle                 | 4.00  | Drop cookie made with butter and rolled in cinnamon      | 
+| 5         | Sugar                         | 3.00  | Drop cookie made with sugar and vanilla                  |
+| 6         | White Chocolate Macadamia Nut | 6.00  | Drop cookie made with white chocolate and macadamia nuts |
 
-<!-- insert where learners can find learning material needed for lab -->
+_Table 1: Products Table_
+
+The main tasks in the lab are as follows:
+
+1. Create a `Cookie` database.
+2. Create a `Products` table.
+3. Populate the `Products` table with data from _Table 1_.
+4. Write a query that returns the contents of the `Products` table as is.
+5. Write a query that returns the contents of the `Products` table in numerical order based on the price.
+
+<!-- TODO insert where learners can find learning material needed for lab -->
+
+When you push your changes back to the assignment GitHub repo, a grading action will run to assess if you have completed the exercises. You can push your changes back to GitHub at any time and check the 'Feedback' pull request (found in the 'Pull requests' tab) to review your progress. You can also use the 'Feedback' pull request to ask your lecturer to review your work or to ask for help if you get stuck.
 
 ## Exercise 1
 
