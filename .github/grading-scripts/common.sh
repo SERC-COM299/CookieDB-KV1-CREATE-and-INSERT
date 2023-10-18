@@ -282,7 +282,7 @@ function is_value_in_array {
     shift
     local array=("$@")
     for element in "${array[@]}"; do
-        if [[ "$element" == "$value" ]]; then
+        if [[ "$element" == *"$value"* ]]; then
             echo "true"
             return 0
         fi

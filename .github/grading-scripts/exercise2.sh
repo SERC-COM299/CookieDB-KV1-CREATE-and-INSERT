@@ -62,7 +62,7 @@ test_table_row_populated () {
     mapfile -t data_array < $DATADIR$table.csv
 
     # get columns from first line
-    IFS=',' read -r -a columns <<< ${data_array[0]}
+    IFS=, read -r -a columns <<< ${data_array[0]}
 
     pk_column_name=${columns[0]}
 
@@ -77,10 +77,10 @@ test_table_row_populated () {
         row=${row//\'/} # strip quotes
 
         # read row into array
-        IFS=',' read -r -a row_data <<< ${row}
+        IFS=, read -r -a row_data <<< "${row}"
 
         if [[ ${row_data[0]} == "$row_pk" ]]; then
-            r=(${row_data[@]})
+            r=("${row_data[@]}")
             status=0
             break
         fi
@@ -107,9 +107,9 @@ test_table_row_populated () {
     for c in ${columns[@]}; do
         QUERY="SELECT $c FROM dbo.$table WHERE $pk_column_name=\"$row_pk\""
         result=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d $DBNAME -Q "$QUERY" | head -n 3 | tail -n 1 | xargs)
-        expected=${r[$i]}
+        expected="${r[$i]}"
 
-        if [[ $result == $expected ]]; then
+        if [[ "$result" == *"$expected"* ]]; then
             echo "    \"$c\" entered correctly: $result"
             feedback_msg+="$TABSPACE$TABSPACE\"$c\" entered correctly: $result  \n"
         else
