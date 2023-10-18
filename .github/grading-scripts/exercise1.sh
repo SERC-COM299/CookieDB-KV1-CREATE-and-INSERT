@@ -5,10 +5,10 @@
 # set -e
 
 # declare which files to use
-QUERYFILE=exercise1.sql
+QUERYFILE=11-Exercise1.sql
 FEEDBACK_FILE=exercise1.md
 
-NUMBER_OF_TASKS_IN_EXERCISE=3
+NUMBER_OF_TASKS_IN_EXERCISE=2
 
 # import common functions and var
 . ./"`dirname \"$0\"`"/common.sh

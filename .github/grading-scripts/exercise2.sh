@@ -5,10 +5,10 @@
 # set -e
 
 # declare which files to use
-QUERYFILE=exercise2.sql
+QUERYFILE=12-Exercise2.sql
 FEEDBACK_FILE=exercise2.md
 
-NUMBER_OF_TASKS_IN_EXERCISE=3
+NUMBER_OF_TASKS_IN_EXERCISE=1
 
 # import common functions and var
 . ./"`dirname \"$0\"`"/common.sh
@@ -108,17 +108,6 @@ test_table_row_populated () {
         QUERY="SELECT $c FROM dbo.$table WHERE $pk_column_name=\"$row_pk\""
         result=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d $DBNAME -Q "$QUERY" | head -n 3 | tail -n 1 | xargs)
         expected=${r[$i]}
-
-        # trim milliseconds from timestamp
-        if [[ $c == 'refill_ts' ]]; then 
-            result=${result:0:19}
-            expected=${expected//T/ }
-        fi
-
-        # trim trailing zeros from refill volume
-        if [[ $c == 'alert_level' ]]; then 
-            result=${result:0:5}
-        fi
 
         if [[ $result == $expected ]]; then
             echo "    \"$c\" entered correctly: $result"
