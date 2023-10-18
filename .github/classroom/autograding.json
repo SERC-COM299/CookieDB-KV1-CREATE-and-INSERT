@@ -1,31 +1,241 @@
 {
   "tests": [
     {
-      "name": "Exercise 1",
+      "name": "Check exercise 1 query file runs",
       "setup": "",
       "run": "/bin/bash ./.github/grading-scripts/exercise1.sh run_query_file",
       "input": "",
       "output": "",
       "comparison": "included",
       "timeout": 10,
-      "points": 10
+      "points": 5
     },
     {
-      "name": "Exercise 2",
+      "name": "Exercise 1 Task 1: Database created",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_database_created 1",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "Exercise 1 Task 2: Table created",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_table_created 2 Products",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "Exercise 1 Task 2: cookieID column added",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_exists 2 Products cookieID",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 1 Task 2: cookieID column data type",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_type 2 Products cookieID int",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 2
+    },
+    {
+      "name": "Exercise 1 Task 2: cookieName column added",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_exists 2 Products cookieName",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 1 Task 2: cookieName column data type",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_type 2 Products cookieName varchar nvarchar",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 2
+    },
+    {
+      "name": "Exercise 1 Task 2: description column added",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_exists 2 Products description",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 1 Task 2: description column data type",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_type 2 Products description varchar nvarchar",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 2
+    },
+    {
+      "name": "Exercise 1 Task 2: price column added",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_exists 2 Products price",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 1 Task 2: price column data type",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_column_type 2 Products price money decimal int",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 2
+    },
+    {
+      "name": "Exercise 1 Task 2: Check number of columns added to Products table",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_number_columns 2 Products 4",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 1 Task 2: Check primary key",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise1.sh test_table_pk 2 Products cookieID",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "Check exercise 2 query file runs",
       "setup": "",
       "run": "/bin/bash ./.github/grading-scripts/exercise2.sh run_query_file",
       "input": "",
       "output": "",
       "comparison": "included",
       "timeout": 10,
-      "points": 10
+      "points": 5
     },
     {
-      "name": "Exercise 3",
+      "name": "Exercise 2 Task 1: Check data entered correctly for 1",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise2.sh test_table_row_populated 1 Products 1",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 2 Task 1: Check data entered correctly for 2",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise2.sh test_table_row_populated 1 Products 2",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 2 Task 1: Check data entered correctly for 3",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise2.sh test_table_row_populated 1 Products 3",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 2 Task 1: Check data entered correctly for 4",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise2.sh test_table_row_populated 1 Products 4",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 2 Task 1: Check data entered correctly for 5",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise2.sh test_table_row_populated 1 Products 5",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 2 Task 1: Check data entered correctly for 6",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise2.sh test_table_row_populated 1 Products 6",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Exercise 2 Task 1: Check correct number of rows entered",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise2.sh test_table_number_rows 1 Products 6",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 1
+    },
+    {
+      "name": "Check exercise 3 query file runs",
       "setup": "",
       "run": "/bin/bash ./.github/grading-scripts/exercise3.sh run_query_file",
       "input": "",
       "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 5
+    },
+    {
+      "name": "Exercise 3 Task 1: Check query shows table contents",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise3.sh test_table_contents_query",
+      "input": "",
+      "output": "pass",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 10
+    },
+    {
+      "name": "Exercise 3 Task 2: Check query shows sorted table contents",
+      "setup": "",
+      "run": "/bin/bash ./.github/grading-scripts/exercise3.sh test_table_contents_query_ordered",
+      "input": "",
+      "output": "pass",
       "comparison": "included",
       "timeout": 10,
       "points": 10

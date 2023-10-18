@@ -50,7 +50,7 @@ When you push your changes back to the assignment GitHub repo, a grading action 
 
 4. Wait a minute for the grading tests to run and then check the [Feedback pull request](../..pull/1) to see if you have completed the exercise successfully. When the grading action finishes, it will post a comment on the Feedback PR with a summary of how / if you have completed the exercise successfully.
 
-Marks available: 38
+Marks available: 34
 
 ## Exercise 2
 
