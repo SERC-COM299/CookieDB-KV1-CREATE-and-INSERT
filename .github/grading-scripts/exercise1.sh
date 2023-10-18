@@ -148,12 +148,15 @@ test_column_type() {
     # $1 task number
     # $2 table name
     # $3 column name
-    # $4 column data type
+    # $4 column data type (array - first item best choice, but other answers possible)
 
     task=$1
     table=$2
     column=$3
-    expected=$4
+    shift
+    shift
+    shift
+    expected=("$@")
 
     feedback_msg="Task $task Create Table - Columns: "
 
@@ -166,10 +169,13 @@ test_column_type() {
     result=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -Q "$QUERY")
 
     # check data type $3 for $2 column for table $1
-    if [[ $result == *"$expected"* ]]; then
+    if [[ $(is_value_in_array "$result" "${expected[@]}") == "true" ]]; then
         echo "$column of suitable data type"
         echo "pass"
         feedback_msg=$PASS_CHAR"$feedback_msg \"$column\" of suitable data type. Test pass."
+        if [[ $result != *"${expected[0]}"* ]]; then
+            feedback_msg="$feedback_msg (However, \"$result\" might not be the best data type. Is there a better data type that could be used?)"
+        fi
         status=0
     else
         echo "$column not of suitable data type"

@@ -275,3 +275,18 @@ split_query_file () {
         fi
     done
 }
+
+function is_value_in_array {
+    # function to check if value is in array
+    local value="$1"
+    shift
+    local array=("$@")
+    for element in "${array[@]}"; do
+        if [[ "$element" == "$value" ]]; then
+            echo "true"
+            return 0
+        fi
+    done
+    echo "false"
+    return 1
+}
