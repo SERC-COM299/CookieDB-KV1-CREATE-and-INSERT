@@ -1,0 +1,51 @@
+name: Check Tests
+
+on: 
+  # push:
+  #   branches:
+  #   - '*'
+  #   - '!badges'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  DBPASS: 'Pa$$w0rd1234'
+
+jobs:
+  build:
+    name: Autograding
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: ${{ env.DBPASS }}
+        ports:
+        - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P \"${SA_PASSWORD}\" -Q \"SELECT 1\" -b -o /dev/null"
+          --health-interval 10s
+          --health-timeout 3s
+          --health-retries 5
+          --health-start-period 10s
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: 'SERC-COM299/CookieDB-KV-Answers'
+          token: ${{ secrets.PRIVATE_PAT }} # PAT scoped to read private repos
+          ref: 'main'
+          path: 'answers'
+
+      # # additional db setup
+      # - name: setup DB
+      #   run: sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d master -i "00-setup.sql"
+
+      # run grading
+      # add id to step so outputs can be referenced
+      - uses: education/autograding@v1
+        name: "** Grading and Feedback **"
+        id: autograde
