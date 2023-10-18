@@ -181,6 +181,9 @@ test_column_type() {
         echo "$column not of suitable data type"
         feedback_msg=$FAIL_CHAR"$feedback_msg \"$column\" not of suitable data type. Test fail."
         status=1
+
+        echo "    expected: ${expected[@]}"
+        echo "    result: $result"
     fi
 
     _write_feedback_msg_to_file "$feedback_msg"
