@@ -14,67 +14,66 @@ NUMBER_OF_TASKS_IN_EXERCISE=2
 . ./"`dirname \"$0\"`"/common.sh
 
 test_table_contents_query () {
-    # test to check query that returns all values in Products table
-    # arguments
-    # no args
 
-    # tables=(Dispensers Rooms)
-    tables=(Products)
+    table=Products
 
-    feedback_msg_head="Task 1 Return Products: "
-    feedback_msg_pass="Query found that shows table contents. Test pass."
-    feedback_msg_fail="Query in $QUERYFILE does not show table contents as expected. Test fail."
+    feedback_msg="Task 1 Return Table Contents: "
 
-    expected_result="13-Exercise3-Task1-Result.txt"
-    task_offset=1
-    # task=1
+    _check_query_file_exists "$feedback_msg"
+    _check_database_exists "$feedback_msg"
+    _check_table_exists $table "$feedback_msg"
+    _check_query_file_runs "$feedback_msg"
 
-    _test_query tables "$feedback_msg_head" "$feedback_msg_pass" "$feedback_msg_fail" "$expected_result" "$task_offset"
+    query="SELECT * FROM dbo.$table"
+    result=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d $DBNAME -i "$QUERYFILE" | head -n 11)
+    expected=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d $DBNAME -Q "$query")
+
+    # check file generates expected query
+    if [[ $result == *"$expected"* ]]; then
+        echo "Query found that shows table contents"
+        echo "pass"
+        feedback_msg=$PASS_CHAR"$feedback_msg Query found that shows table contents. Test pass."
+        status=0
+    else
+        echo "Query in $QUERYFILE does not show table contents as expected."
+        echo "Are the columns in the same order as given in the instructions?"
+        feedback_msg=$FAIL_CHAR"$feedback_msg Query in $QUERYFILE does not show table contents as expected. Test fail."
+        feedback_msg+="  \n$TABSPACE Are the columns in the same order as given in the instructions?"
+        status=1
+    fi
+
+    _write_feedback_msg_to_file "$feedback_msg"
+    exit $status
 }
 
 test_table_contents_query_ordered () {
-    # test to check query that returns all values in Products table ordered by price
-    # arguments
-    # no args
 
-    # tables=(Dispensers Rooms)
-    tables=(Products)
+    table=Products
 
-    feedback_msg_head="Task 1 Return Products ordered by price: "
-    feedback_msg_pass="Query found that shows table contents in numerical order. Test pass."
-    feedback_msg_fail="Query in $QUERYFILE does not show table contents as expected. Test fail."
+    feedback_msg="Task 2 Return Table Contents Numerically Ordered: "
 
-    expected_result="13-Exercise3-Task2-Result.txt"
-    task_offset=2
-    # task=1
-
-    _test_query tables "$feedback_msg_head" "$feedback_msg_pass" "$feedback_msg_fail" "$expected_result" "$task_offset"
-}
-
-test_function () {
-    # test function for specific test
-    # arguments
-    # $1 param
-    # $2 param
-
-    feedback_msg="Task 1: "
-
-    # check certain conditions before running test
     _check_query_file_exists "$feedback_msg"
     _check_database_exists "$feedback_msg"
+    _check_table_exists $table "$feedback_msg"
     _check_query_file_runs "$feedback_msg"
 
-    # run test code here
-    $test=0
-    # replace $test with test condition in if
-    if [[ $test ]]; then
-        echo "Feedback in workflow log"
+    query="SELECT cookieID, cookieName, description, price FROM dbo.$table ORDER BY $table.price"
+    result=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d $DBNAME -i "$QUERYFILE" | tail -n 10)
+    expected=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -d $DBNAME -Q "$query")
+
+    # check file generates expected query
+    if [[ $result == *"$expected"* ]]; then
+        echo "Query found that shows table contents in numerical order"
         echo "pass"
-        feedback_msg=$PASS_CHAR"$feedback_msg Feedback in PR comment. Test pass."
+        feedback_msg=$PASS_CHAR"$feedback_msg Query found that shows table contents in alphabetical order. Test pass."
         status=0
     else
-        echo "Feedback in workflow log"
-        feedback_msg=$FAIL_CHAR"$feedback_msg Feedback in PR comment. Test fail."
+        echo "Query in $QUERYFILE does not show table contents as expected."
+        echo "Are the columns in the same order as given in the instructions?"
+        echo "Are the results ordered numerically by last name?"
+        feedback_msg=$FAIL_CHAR"$feedback_msg Query in $QUERYFILE does not show table contents as expected. Test fail."
+        feedback_msg+="  \n$TABSPACE Are the columns in the same order as given in the instructions?"
+        feedback_msg+="  \n$TABSPACE Are the results ordered numerically by last name?"
         status=1
     fi
 
