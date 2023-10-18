@@ -166,7 +166,7 @@ test_column_type() {
     _check_table_exists $table "$feedback_msg"
 
     QUERY="USE $DBNAME SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '$table' AND COLUMN_NAME = '$column'"
-    result=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -Q "$QUERY")
+    result=$(sqlcmd -S 127.0.0.1 -U sa -P $DBPASS -Q "$QUERY" | tail -n 3 | head -n 1 | xargs)
 
     # check data type $3 for $2 column for table $1
     if [[ $(is_value_in_array "$result" "${expected[@]}") == "true" ]]; then
