@@ -75,4 +75,8 @@ Marks available: 25
 
 ## Additional Learning Resources
 
--
+- [Microsoft Docs: CREATE database](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-database-transact-sql?view=sql-server-linux-ver15&preserve-view=true&tabs=sqlpool)
+- [Microsoft Docs: CREATE table](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-table-transact-sql?view=sql-server-linux-ver15)
+- [Microsoft Docs: INSERT](https://docs.microsoft.com/en-us/sql/t-sql/statements/insert-transact-sql?view=sql-server-linux-ver15)
+- [Microsoft Docs: SELECT](https://docs.microsoft.com/en-us/sql/t-sql/queries/select-transact-sql?view=sql-server-linux-ver15)
+
