@@ -196,12 +196,24 @@ jobs:
       - name: make activity icons dir
         run: mkdir -p .github/activity-icons
 
+      # set color based on grading score
+      - name: set color
+        run: |
+          if [ ${{ needs.grade.outputs.grading-percent }} -ge 60 ]; then
+            points_color="#33CC11"
+          else
+            points_color="#0170F0"
+          fi
+          echo "::set-output name=bar-color::$points_color"
+        id: set-color
+
       # create points bar
       - name: points bar
         uses: markpatterson27/points-bar@v1
         with:
           points: ${{ needs.grade.outputs.grading-score }}
           path: '.github/activity-icons/points-bar.svg'
+          bar-color: ${{ steps.set-color.outputs.bar-color }}
         continue-on-error: true
 
       # commit and push points-bar if changed
